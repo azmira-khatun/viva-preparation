@@ -1,0 +1,134 @@
+
+🔹 Database‑level Commands
+-- নতুন ডাটাবেস তৈরি
+CREATE DATABASE database_name;
+
+-- কোন ডাটাবেস use (active) করবেন
+USE database_name;
+
+-- সব ডাটাবেস দেখুন
+SHOW DATABASES;
+
+-- ডাটাবেস drop (মুছে ফেলুন)
+DROP DATABASE IF EXISTS database_name;
+
+🔹 Table / Schema (DDL) Commands
+-- নতুন table তৈরি
+CREATE TABLE table_name (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  -- আপনি দরকার মতো column গুলো দিন
+);
+
+-- table rename করতে চাইলে
+ALTER TABLE old_table_name RENAME TO new_table_name;
+
+-- নতুন column যোগ করতে
+ALTER TABLE table_name ADD COLUMN new_column_name datatype;
+
+-- কোনো column drop (মুছতে) চাইলে
+ALTER TABLE table_name DROP COLUMN column_name;
+
+-- column datatype বা other attributes change করতে
+ALTER TABLE table_name MODIFY COLUMN column_name new_datatype;
+
+-- পুরা table drop (remove) করতে
+DROP TABLE IF EXISTS table_name;
+
+-- database এর table‑গুলোর list দেখতে
+SHOW TABLES;
+
+-- table structure বা column‑info দেখতে
+DESCRIBE table_name;
+SHOW COLUMNS FROM table_name;
+
+🔹 Data Manipulation (DML) — Data insert / update / delete / read
+-- নতুন record insert
+INSERT INTO table_name (col1, col2, col3)
+VALUES (value1, value2, value3);
+
+-- একাধিক row একসঙ্গে insert
+INSERT INTO table_name (col1, col2)
+VALUES
+  (val1, val2),
+  (val3, val4),
+  (val5, val6);
+
+-- ডাটা update / পরিবর্তন করতে
+UPDATE table_name 
+SET col1 = new_value1, col2 = new_value2
+WHERE condition;
+
+-- ডাটা delete করতে (single / multiple rows)
+DELETE FROM table_name WHERE condition;
+
+-- table‑এর সব row একসঙ্গে delete করতে / clean করতে (structure থাকবে)
+TRUNCATE TABLE table_name;
+
+🔹 Data Read / Query (SELECT / Filtering / Sorting / Limit)
+-- সব column সহ সব rows select করতে
+SELECT * FROM table_name;
+
+-- নির্দিষ্ট column গুলো select
+SELECT col1, col2 FROM table_name;
+
+-- row filter করতে (condition অনুযায়ী)
+SELECT * FROM table_name WHERE col1 = 'some value';
+
+-- multiple condition হলে AND / OR
+SELECT * FROM table_name 
+WHERE col1 = 'value' AND col2 > 10;
+
+-- range‑এর ভিতর filter (numeric / date etc.)
+SELECT * FROM table_name
+WHERE col BETWEEN value1 AND value2;
+
+-- লিস্ট‑ভুক্ত কোন মান পাওয়া যাবে কি না চেক করতে
+SELECT * FROM table_name
+WHERE col IN (value1, value2, value3);
+
+-- pattern matching (text search) — যেমন: starts with, contains
+SELECT * FROM table_name
+WHERE col LIKE 'abc%';  -- starts with 'abc'
+SELECT * FROM table_name
+WHERE col LIKE '%xyz%'; -- contains 'xyz'
+
+-- order by, sorting
+SELECT * FROM table_name
+ORDER BY col1 ASC;   -- ascending
+SELECT * FROM table_name
+ORDER BY col2 DESC;  -- descending
+
+-- limit + offset (pagination / top‑results)
+SELECT * FROM table_name
+LIMIT 10;            -- first 10 rows
+SELECT * FROM table_name
+LIMIT 5, 10;         -- skip first 5, then next 10
+
+-- distinct results (duplicate avoid)
+SELECT DISTINCT col1 FROM table_name;
+
+🔹 Joining / Multiple‑table Query (Basic example)
+-- inner join example
+SELECT t1.col1, t2.col2
+FROM table1 t1
+INNER JOIN table2 t2
+  ON t1.foreign_key = t2.id
+WHERE t2.some_column = 'some value';
+
+-- left / right join, full join etc depending on need
+
+🔹 Transaction / Data Control / Privilege (basic)
+-- একটি transaction শুরু করতে
+START TRANSACTION;
+
+-- যদি সব কিছু ঠিক থাকে, commit করতে
+COMMIT;
+
+-- যদি কেউ ভুল হয়, বা revert করতে চাইলে
+ROLLBACK;
+
+-- user privileges সেট করতে (simplest form)
+GRANT ALL PRIVILEGES ON database_name.* TO 'username'@'localhost' IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;
