@@ -1,0 +1,1 @@
+User “azmirakh_event_management_system” was added to the database “azmirakh_pos_project”.
